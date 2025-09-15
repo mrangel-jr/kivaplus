@@ -1,16 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Amplify suporta SSR automaticamente
-  experimental: {
-    serverComponentsExternalPackages: [],
-  },
 
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
-
-  // Otimizações para Amplify
-  swcMinify: true,
 
   // Headers de segurança
   async headers() {
