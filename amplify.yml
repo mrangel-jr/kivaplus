@@ -6,8 +6,6 @@ applications:
         preBuild:
           commands:
             - echo "Starting build in frontend directory"
-            - cd frontend
-            - echo "Current directory $(pwd)"
             - ls -la
             - npm ci
         build:
