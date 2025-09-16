@@ -1,0 +1,58 @@
+version: 1
+applications:
+  - appRoot: frontend
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - echo "=== AMPLIFY MONOREPO DEBUG ==="
+            - echo "Build timestamp: $(date)"
+            - echo "Current directory: $(pwd)"
+            - echo "Root directory contents:"
+            - ls -la
+            - echo "=== VALIDATING FRONTEND DIRECTORY ==="
+            - if [ ! -d "frontend" ]; then echo "❌ ERROR: frontend directory not found!"; exit 1; fi
+            - echo "✅ frontend directory found"
+            - echo "=== SWITCHING TO FRONTEND ==="
+            - cd frontend
+            - echo "Now in: $(pwd)"
+            - echo "Frontend directory contents:"
+            - ls -la
+            - echo "=== VALIDATING PACKAGE.JSON ==="
+            - if [ ! -f "package.json" ]; then echo "❌ ERROR: package.json not found!"; exit 1; fi
+            - echo "✅ package.json found"
+            - echo "Package.json contents:"
+            - cat package.json
+            - echo "=== SYSTEM INFO ==="
+            - echo "Node version: $(node --version)"
+            - echo "NPM version: $(npm --version)"
+            - echo "=== INSTALLING DEPENDENCIES ==="
+            - npm ci
+            - echo "✅ Dependencies installed successfully"
+        build:
+          commands:
+            - echo "=== BUILD PHASE ==="
+            - echo "Current directory: $(pwd)"
+            - echo "Building Next.js application..."
+            - npm run build
+            - echo "=== VERIFYING BUILD OUTPUT ==="
+            - if [ ! -d ".next" ]; then echo "❌ ERROR: .next directory not found!"; exit 1; fi
+            - echo "✅ Build successful - .next directory found"
+            - echo "Build output contents:"
+            - ls -la .next/
+            - echo "Sample generated files:"
+            - find .next -type f | head -15
+        postBuild:
+          commands:
+            - echo "=== POST BUILD ==="
+            - echo "Final verification in: $(pwd)"
+            - echo "Final .next contents:"
+            - ls -la .next/
+            - echo "🎉 Build completed successfully!"
+      artifacts:
+        baseDirectory: .next
+        files:
+          - "**/*"
+      cache:
+        paths:
+          - node_modules/**/*
